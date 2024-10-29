@@ -15,7 +15,7 @@ INNGEST_API_BASE_URL=http://localhost:8090
 INNGEST_EVENT_API_BASE_URL=http://localhost:9999
 ```
 
-### Runt the app
+### Run the app
 
 ```
 deno task start
@@ -23,8 +23,12 @@ deno task start
 
 This will watch the project directory and restart as necessary.
 
-### cli for openai
+### cli
 
 ```
 deno task openai
+```
+
+```
+deno task vercel
 ```
