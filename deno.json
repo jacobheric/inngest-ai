@@ -7,6 +7,7 @@
     "start": "deno run -A --watch=static/,routes/ dev.ts",
     "build": "deno run -A dev.ts build",
     "openai": "deno run -A ./lib/cli/openai.ts",
+    "vercel": "deno run -A ./lib/cli/vercel.ts",
     "preview": "deno run -A main.ts",
     "update": "deno run -A -r https://fresh.deno.dev/update ."
   },
@@ -34,11 +35,18 @@
     "tailwindcss/": "npm:/tailwindcss@3.4.1/",
     "tailwindcss/plugin": "npm:/tailwindcss@3.4.1/plugin.js",
     "inngest": "npm:inngest@pr-728",
-    "openai": "npm:openai"
+    "openai": "npm:openai",
+    "ai": "npm:ai",
+    "@ai-sdk/openai": "npm:@ai-sdk/openai"
   },
   "compilerOptions": {
     "jsx": "react-jsx",
     "jsxImportSource": "preact"
   },
-  "nodeModulesDir": "auto"
+  "nodeModulesDir": "auto",
+  "fmt": {
+    "exclude": [
+      "**/node_modules"
+    ]
+  }
 }
