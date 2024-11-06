@@ -23,7 +23,7 @@ deno task start
 
 This will watch the project directory and restart as necessary.
 
-### cli
+### cli - send test prompts to openai
 
 ```
 deno task openai
