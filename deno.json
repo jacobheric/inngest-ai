@@ -37,7 +37,7 @@
     "$fresh/": "https://deno.land/x/fresh@1.7.3/",
     "$std/": "https://deno.land/std@0.216.0/",
     "ai": "npm:ai",
-    "inngest": "npm:inngest@3.25.2-pr-747.7",
+    "inngest": "npm:inngest@latest",
     "openai": "npm:openai",
     "preact": "https://esm.sh/preact@10.22.0",
     "preact/": "https://esm.sh/preact@10.22.0/",
