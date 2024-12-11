@@ -10,6 +10,7 @@
     "google": "deno run -A ./lib/cli/google.ts",
     "vercel": "deno run -A ./lib/cli/vercel.ts",
     "anthropic": "deno run -A ./lib/cli/anthropic.ts",
+    "send": "deno run -A ./lib/cli/send.ts",
     "preview": "deno run -A main.ts",
     "update": "deno run -A -r https://fresh.deno.dev/update ."
   },
@@ -37,13 +38,14 @@
     "$fresh/": "https://deno.land/x/fresh@1.7.3/",
     "$std/": "https://deno.land/std@0.216.0/",
     "ai": "npm:ai",
-    "inngest": "npm:inngest@latest",
+    "inngest": "npm:inngest@3.27.0",
     "openai": "npm:openai",
     "preact": "https://esm.sh/preact@10.22.0",
     "preact/": "https://esm.sh/preact@10.22.0/",
     "tailwindcss": "npm:tailwindcss@3.4.1",
     "tailwindcss/": "npm:/tailwindcss@3.4.1/",
-    "tailwindcss/plugin": "npm:/tailwindcss@3.4.1/plugin.js"
+    "tailwindcss/plugin": "npm:/tailwindcss@3.4.1/plugin.js",
+    "zod": "npm:zod@latest"
   },
   "compilerOptions": {
     "jsx": "react-jsx",
