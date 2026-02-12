@@ -64,7 +64,7 @@ export const throwError = inngest.createFunction(
 export const greeting = inngest.createFunction(
   { id: "greeting-workflow" },
   { event: "greeting/workflow" },
-  async ({ input, step }) => {
+  async ({ step }) => {
     console.log("  → Starting workflow");
     const upperName = await step.run("uppercase", async () => {
       console.log("  → Running step: uppercase");

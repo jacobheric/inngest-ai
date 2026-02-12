@@ -18,10 +18,17 @@ INNGEST_EVENT_API_BASE_URL=http://localhost:9999
 ### Run the app
 
 ```
-deno task start
+deno task dev
 ```
 
 This will watch the project directory and restart as necessary.
+
+### Run production build
+
+```
+deno task build
+deno task start
+```
 
 ### cli - send test prompts to openai
 

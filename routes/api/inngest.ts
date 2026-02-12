@@ -25,8 +25,9 @@ import {
   vercelWrapGenerateText,
 } from "@/lib/inngest/functions.ts";
 import { serve } from "inngest/deno/fresh";
+import type { FreshContext } from "fresh";
 
-export const handler = serve({
+const inngestHandler = serve({
   client: inngest,
   functions: [
     helloWorld,
@@ -54,3 +55,11 @@ export const handler = serve({
     anotherDerp,
   ],
 });
+
+//
+// Fresh 2 handlers receive context first, but Inngest expects a Request
+export const handler = {
+  GET: (ctx: FreshContext) => inngestHandler(ctx.req),
+  POST: (ctx: FreshContext) => inngestHandler(ctx.req),
+  PUT: (ctx: FreshContext) => inngestHandler(ctx.req),
+};
