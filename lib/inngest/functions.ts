@@ -11,20 +11,18 @@ import Anthropic from "@anthropic-ai/sdk";
 const anthropic = new Anthropic();
 
 export const helloWorld = inngest.createFunction(
-  { id: "hello-world" },
-  { event: "test/hello.world" },
-  async ({ event, step }) => {
+  { id: "hello-world", triggers: { event: "test/hello.world" } },
+  async ({ step }) => {
     console.log("running hello world");
     await step.sleep("wait-a-moment", "1s");
 
     console.log("ran hello world");
-    return { event, body: "Hello, World!" };
+    return { body: "Hello, World!" };
   },
 );
 
 export const derp = inngest.createFunction(
-  { id: "derp" },
-  { event: "test/derp" },
+  { id: "derp", triggers: { event: "test/derp" } },
   async ({ event, step }) => {
     console.log("running derp");
     await step.sleep("wait-a-moment", "1s");
@@ -35,8 +33,7 @@ export const derp = inngest.createFunction(
 );
 
 export const anotherDerp = inngest.createFunction(
-  { id: "another-derp" },
-  { event: "test/another.derp" },
+  { id: "another-derp", triggers: { event: "test/another.derp" } },
   async ({ event, step }) => {
     console.log("running another derp");
     await step.sleep("wait-a-moment", "1s");
@@ -47,31 +44,27 @@ export const anotherDerp = inngest.createFunction(
 );
 
 export const throwError = inngest.createFunction(
-  { id: "throw-error" },
-  { event: "test/throw.error" },
-  async ({ event, step }) => {
+  { id: "throw-error", triggers: { event: "test/throw.error" } },
+  async ({ step }) => {
     console.log("running a run that throws an error");
     await step.sleep("wait-for-it", "1s");
 
     throw new Error(
       "some error....",
     );
-
-    return { event, body: "done!" };
   },
 );
 
 export const greeting = inngest.createFunction(
-  { id: "greeting-workflow" },
-  { event: "greeting/workflow" },
+  { id: "greeting-workflow", triggers: { event: "greeting/workflow" } },
   async ({ step }) => {
     console.log("  → Starting workflow");
-    const upperName = await step.run("uppercase", async () => {
+    const upperName = await step.run("uppercase", () => {
       console.log("  → Running step: uppercase");
       return "test";
     });
 
-    const greeting = await step.run("create-greeting", async () => {
+    const greeting = await step.run("create-greeting", () => {
       console.log("  → Running step: create-greeting");
       return `Hello, ${upperName}!`;
     });
@@ -81,8 +74,7 @@ export const greeting = inngest.createFunction(
 );
 
 export const returnError = inngest.createFunction(
-  { id: "return-error" },
-  { event: "test/return.error" },
+  { id: "return-error", triggers: { event: "test/return.error" } },
   async ({ event, step }) => {
     console.log("running a run that returns an error");
     await step.sleep("wait-for-it", "1s");
@@ -96,14 +88,17 @@ export const returnError = inngest.createFunction(
 );
 
 export const input = inngest.createFunction(
-  { id: "step-with-input", concurrency: 10 },
-  { event: "test/step.with.input" },
+  {
+    id: "step-with-input",
+    concurrency: 10,
+    triggers: { event: "test/step.with.input" },
+  },
   async ({ event, step }) => {
     await step.sleep("wait-a-moment", "1s");
 
     await step.run(
       "step input",
-      (foo: number, bar: boolean) => {
+      (_foo: number, _bar: boolean) => {
         return "step output!";
       },
       5,
@@ -116,8 +111,10 @@ export const input = inngest.createFunction(
 );
 
 export const multipleInputs = inngest.createFunction(
-  { id: "step-with-multiple-inputs" },
-  { event: "test/step.with.multiple.inputs" },
+  {
+    id: "step-with-multiple-inputs",
+    triggers: { event: "test/step.with.multiple.inputs" },
+  },
   async ({ event, step }) => {
     await step.run(
       "step input #1",
@@ -166,9 +163,8 @@ export const multipleInputs = inngest.createFunction(
 );
 
 export const stepless = inngest.createFunction(
-  { id: "stepless" },
-  { event: "test/stepless" },
-  async ({ event }) => {
+  { id: "stepless", triggers: { event: "test/stepless" } },
+  ({ event }) => {
     console.log("running stepless");
 
     return { event, body: "Stepless output" };
@@ -176,8 +172,7 @@ export const stepless = inngest.createFunction(
 );
 
 export const nonRetriable = inngest.createFunction(
-  { id: "non-retriable" },
-  { event: "test/non.retriable" },
+  { id: "non-retriable", triggers: { event: "test/non.retriable" } },
   async ({ event, step }) => {
     event.data.retries = 10;
     console.log("running hello world");
@@ -187,7 +182,6 @@ export const nonRetriable = inngest.createFunction(
       throw new NonRetriableError("non retriable error", {
         cause: { shiKeyt: "shitValue" },
       });
-      return "step #1 output!";
     });
 
     console.log("ran hello world");
@@ -196,16 +190,12 @@ export const nonRetriable = inngest.createFunction(
 );
 
 export const nullFunction = inngest.createFunction(
-  { id: "null-function" },
-  { event: "test/null.function" },
-  async ({ event, step }) => {
-    return null;
-  },
+  { id: "null-function", triggers: { event: "test/null.function" } },
+  () => null,
 );
 
 export const fetchOtel = inngest.createFunction(
-  { id: "fetch-otel", retries: 1 },
-  { event: "test/fetch.otel" },
+  { id: "fetch-otel", retries: 1, triggers: { event: "test/fetch.otel" } },
   async ({ event, step, logger }) => {
     logger.info("running fetch ");
 
@@ -230,8 +220,10 @@ export const fetchOtel = inngest.createFunction(
 );
 
 export const genericWrapGenerateText = inngest.createFunction(
-  { id: "generic-wrap-generateText" },
-  { event: "generic/wrap.generate.text" },
+  {
+    id: "generic-wrap-generateText",
+    triggers: { event: "generic/wrap.generate.text" },
+  },
   async ({ event, step }) => {
     const { provider, model, prompt } = event.data;
     console.log("generic wrapped generate text", provider, model, prompt);
@@ -248,8 +240,11 @@ export const genericWrapGenerateText = inngest.createFunction(
 );
 
 export const manySteps = inngest.createFunction(
-  { id: "many-steps", concurrency: 10 },
-  { event: "test/many.steps" },
+  {
+    id: "many-steps",
+    concurrency: 10,
+    triggers: { event: "test/many.steps" },
+  },
   async ({ event, step }) => {
     console.log("running many steps");
 
@@ -266,8 +261,11 @@ export const manySteps = inngest.createFunction(
 );
 
 export const aThousandAndOneSteps = inngest.createFunction(
-  { id: "a-thousand-and-one-steps", concurrency: 10 },
-  { event: "test/a.thousand.and.one.steps" },
+  {
+    id: "a-thousand-and-one-steps",
+    concurrency: 10,
+    triggers: { event: "test/a.thousand.and.one.steps" },
+  },
   async ({ event, step }) => {
     console.log("running a thousand and one steps");
 
@@ -284,8 +282,11 @@ export const aThousandAndOneSteps = inngest.createFunction(
 );
 
 export const longRunning = inngest.createFunction(
-  { id: "long-running", concurrency: 1 },
-  { event: "test/long.running" },
+  {
+    id: "long-running",
+    concurrency: 1,
+    triggers: { event: "test/long.running" },
+  },
   async ({ event, step }) => {
     console.log("running ");
     await step.run("block a step run for 10 minutes", async () => {
@@ -299,9 +300,11 @@ export const longRunning = inngest.createFunction(
 );
 
 export const anthropicWrapMessageCreate = inngest.createFunction(
-  { id: "anthropic-wrap-message-create" },
-  { event: "anthropic/wrap.message.create" },
-  async ({ event, step }) => {
+  {
+    id: "anthropic-wrap-message-create",
+    triggers: { event: "anthropic/wrap.message.create" },
+  },
+  async ({ step }) => {
     //
     // Will fail because anthropic client requires instance context
     // to be preserved across invocations.
@@ -316,7 +319,7 @@ export const anthropicWrapMessageCreate = inngest.createFunction(
     // );
 
     //
-    // Will work beccause we bind to preserve instance context
+    // Will work because we bind to preserve instance context
     const createCompletion = anthropic.messages.create.bind(anthropic.messages);
     await step.ai.wrap(
       "using-anthropic",
@@ -331,11 +334,13 @@ export const anthropicWrapMessageCreate = inngest.createFunction(
 );
 
 export const openAIWrapCompletionCreate = inngest.createFunction(
-  { id: "opeai-wrap-completion-create" },
-  { event: "openai/wrap.completion.create" },
-  async ({ event, step }) => {
+  {
+    id: "opeai-wrap-completion-create",
+    triggers: { event: "openai/wrap.completion.create" },
+  },
+  async ({ step }) => {
     //
-    // Will fail because anthropic client requires instance context
+    // Will fail because the OpenAI client requires instance context
     // to be preserved across invocations.
     // await step.ai.wrap(
     //   "openai.wrap.completions",
@@ -353,12 +358,12 @@ export const openAIWrapCompletionCreate = inngest.createFunction(
     // );
 
     //
-    // Will work beccause we bind to preserve instance context
+    // Will work because we bind to preserve instance context
     const createCompletion = openai.chat.completions.create.bind(
       openai.chat.completions,
     );
 
-    const response = await step.ai.wrap(
+    await step.ai.wrap(
       "openai-wrap-completions",
       createCompletion,
       {
@@ -376,9 +381,11 @@ export const openAIWrapCompletionCreate = inngest.createFunction(
 );
 
 export const vercelWrapGenerateText = inngest.createFunction(
-  { id: "vercel-wrap-generate-text" },
-  { event: "vercel/wrap.generate.text" },
-  async ({ event, step }) => {
+  {
+    id: "vercel-wrap-generate-text",
+    triggers: { event: "vercel/wrap.generate.text" },
+  },
+  async ({ step }) => {
     //
     // Will work but you will not be able to edit the prompt and rerun the step in the dev server.
     await step.ai.wrap(
@@ -409,8 +416,7 @@ export const vercelWrapGenerateText = inngest.createFunction(
 );
 
 export const aiInfer = inngest.createFunction(
-  { id: "ai-infer-test" },
-  { event: "ai/infer.test" },
+  { id: "ai-infer-test", triggers: { event: "ai/infer.test" } },
   async ({ event, step }) => {
     console.log("running ai infer", OPENAI_API_KEY);
     const response = await step.ai.infer("inference", {
@@ -433,8 +439,10 @@ export const aiInfer = inngest.createFunction(
 );
 
 export const aiInferMultiStep = inngest.createFunction(
-  { id: "ai-infer-multi-step" },
-  { event: "ai/infer.multi.step" },
+  {
+    id: "ai-infer-multi-step",
+    triggers: { event: "ai/infer.multi.step" },
+  },
   async ({ event, step }) => {
     console.log("running ai infer");
     const response = await step.ai.infer("inferenceOne", {
@@ -471,10 +479,8 @@ export const aiInferMultiStep = inngest.createFunction(
 );
 
 export const processUser = inngest.createFunction(
-  { id: "process-user" },
-  { event: "user/process" },
-  async ({ event, step, attempt }) => {
-    // Step 1: Fetch and validate user
+  { id: "process-user", triggers: { event: "user/process" } },
+  async ({ event, step }) => {
     const user = await step.run("get-user", async () => {
       const userData = await fetchUser(event.data.userId);
 
@@ -486,11 +492,9 @@ export const processUser = inngest.createFunction(
         throw new NonRetriableError("User missing email or inactive");
       }
 
-      // At this point, TypeScript knows email is non-null
-      return userData; // email: string | null (but we validated it's not null)
+      return userData;
     });
 
-    // Step 2: Use the validated user
     await step.run("send-email", async () => {
       await sendEmail(user.email, "Welcome!");
     });
@@ -511,8 +515,7 @@ const sendEmail = async (email: string, message: string) => {
 };
 
 export const sendEvent = inngest.createFunction(
-  { id: "sendEvent" },
-  { event: "test/send.event" },
+  { id: "sendEvent", triggers: { event: "test/send.event" } },
   async ({ event, step }) => {
     console.log("sending event.data.name", event.data.name);
 

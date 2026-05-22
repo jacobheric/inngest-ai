@@ -25,41 +25,42 @@ import {
   vercelWrapGenerateText,
 } from "@/lib/inngest/functions.ts";
 import { serve } from "inngest/deno/fresh";
-import type { FreshContext } from "fresh";
+import type { Context } from "fresh";
+import { State } from "../../utils.ts";
 
 const inngestHandler = serve({
   client: inngest,
   functions: [
-    helloWorld,
-    sendEvent,
-    genericWrapGenerateText,
-    anthropicWrapMessageCreate,
-    openAIWrapCompletionCreate,
-    vercelWrapGenerateText,
     aiInfer,
     aiInferMultiStep,
-    nullFunction,
+    anotherDerp,
+    anthropicWrapMessageCreate,
+    aThousandAndOneSteps,
+    derp,
     fetchOtel,
-    nonRetriable,
-    manySteps,
-    stepless,
+    genericWrapGenerateText,
+    greeting,
+    helloWorld,
     input,
     longRunning,
-    processUser,
-    throwError,
-    returnError,
+    manySteps,
     multipleInputs,
-    aThousandAndOneSteps,
-    greeting,
-    derp,
-    anotherDerp,
+    nonRetriable,
+    nullFunction,
+    openAIWrapCompletionCreate,
+    processUser,
+    returnError,
+    sendEvent,
+    stepless,
+    throwError,
+    vercelWrapGenerateText,
   ],
 });
 
 //
 // Fresh 2 handlers receive context first, but Inngest expects a Request
 export const handler = {
-  GET: (ctx: FreshContext) => inngestHandler(ctx.req),
-  POST: (ctx: FreshContext) => inngestHandler(ctx.req),
-  PUT: (ctx: FreshContext) => inngestHandler(ctx.req),
+  GET: (ctx: Context<State>) => inngestHandler(ctx.req),
+  POST: (ctx: Context<State>) => inngestHandler(ctx.req),
+  PUT: (ctx: Context<State>) => inngestHandler(ctx.req),
 };
